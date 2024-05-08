@@ -1,3 +1,4 @@
+// code pour gallery
 const gallery = document.querySelector('.gallery');
 
 async function fetchWork() {
@@ -15,3 +16,6 @@ async function fetchWork() {
     });
     }catch (error){console.error ('une erreur s\'est produite pendant la récupération des données')}
 }
+fetchWork()
+
+// filtres
