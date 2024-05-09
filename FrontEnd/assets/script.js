@@ -11,8 +11,8 @@ async function fetchWork() {
             const workElement = document.createElement ('figure');
             gallery.appendChild(workElement);
             workElement.innerHTML = `
-                <h3>${work.title}</h3>
-                <img src='${work.imageUrl}' alt='${work.title}' />`;
+                <img src='${work.imageUrl}' alt='${work.title}' />
+                <h3>${work.title}</h3>`;
     });
     }catch (error){console.error ('une erreur s\'est produite pendant la récupération des données')}
 }

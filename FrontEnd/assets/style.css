@@ -22,6 +22,7 @@ time, mark, audio, video {
 	font-size: 100%;
 	font: inherit;
 	vertical-align: baseline;
+	line-height: normal;
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
@@ -34,6 +35,7 @@ body {
 ol, ul {
 	list-style: none;
 }
+
 blockquote, q {
 	quotes: none;
 }
@@ -59,7 +61,7 @@ header {
 	margin: 50px 0
 }
 section {
-	margin: 50px 0
+	margin: 11% 8%
 }
 
 h1{
@@ -90,9 +92,14 @@ nav ul {
 	list-style-type: none;
 
 }
+ul img {
+	width: 1.2em;
+}
+
 nav li {
-	padding: 0 10px;
+	padding: 0 20px;
 	font-size: 1.2em;
+	display: flex;
 }
 
 li:hover {
@@ -103,16 +110,16 @@ li:hover {
 	align-items: center;
 }
 #introduction figure {
-	flex: 1
+	width: 50%;
 }
 #introduction img {
 	display: block;
-	margin: auto;
-	width: 80%;
+	width: 100%;
 }
 
 #introduction article {
-	flex: 1
+	flex: 1;
+	margin-left: 8%;
 }
 #introduction h2 {
 	margin-bottom: 1em;
@@ -124,6 +131,10 @@ li:hover {
 #portfolio h2 {
 	text-align: center;
 	margin-bottom: 1em;
+}
+
+#portfolio h3 {
+	margin-top: 0.5em;
 }
 .gallery {
 	width: 100%;
