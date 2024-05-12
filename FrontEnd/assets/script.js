@@ -1,6 +1,7 @@
 //variables appelées
 const gallery = document.querySelector('.gallery');
 const portfolio = document.getElementById('portfolio');
+const h2Portfolio = document.querySelector('#portfolio h2');
 
 // code pour gallery
 async function fetchWork() {
@@ -45,7 +46,16 @@ function createFilterButtons(categories) {
     const filterWorkParent = document.createElement('div');
     filterWorkParent.classList.add('filter');
     portfolio.appendChild(filterWorkParent);
+    h2Portfolio.insertAdjacentElement('afterend',filterWorkParent );
 
+    //bouton "Tous"
+    const ButtonTous = document.createElement('button');
+    ButtonTous.textContent = "Tous";
+    ButtonTous.classList.add('filter-button');
+    ButtonTous.dataset.filter = "all"; 
+    filterWorkParent.appendChild(ButtonTous);
+
+    //autres boutons
     categories.forEach(category => {
         const button = document.createElement('button');
         button.textContent = category.name;
@@ -64,10 +74,6 @@ async function Filtering() {
         const worksData = await fetchWork ();
 
         filterWorkParent.querySelectorAll('.filter-button').forEach(button => {
-            button.removeEventListener('click', clickButton);
-        });
-
-        filterWorkParent.querySelectorAll('.filter-button').forEach(button => {
             button.addEventListener("click", clickButton);
         });
 
@@ -75,9 +81,14 @@ async function Filtering() {
             const filterValue = this.dataset.filter;
 
             // Filtrer les travaux en fonction de la catégorie sélectionnée
-            const filteredWorks = worksData.filter(work => {
-                return work.category.name.toLowerCase() === filterValue;
-            });
+            let filteredWorks;
+            if (filterValue === "all") {
+                filteredWorks = worksData; 
+            } else {
+                filteredWorks = worksData.filter(work => {
+                    return work.category.name.toLowerCase() === filterValue;
+                });
+            }
 
             // Effacer les images actuelles de la galerie
             gallery.innerHTML = '';
@@ -97,27 +108,3 @@ async function Filtering() {
 }
 
 Filtering();
-
-
-/*async function filter(){
-    try{
-        const response = await fetch ("http://localhost:5678/api/categories");
-        console.log(response.status);
-        const data = await response.json();
-        console.log("affichage data",data);
-
-        const filterWorkParent = document.createElement ('div');
-        portfolio.appendChild(filterWorkParent);
-        filterWorkParent.classList.add ('filter');
-
-        //création boutons
-        categories.forEach(category => {
-            const button = document.createElement('button');
-            button.textContent = category.name;
-            button.classList.add('filter-button');
-            button.dataset.filter = category.name.toLowerCase();
-            filterWorkParent.appendChild(button);});
-    }
-    catch (error){console.error ('une erreur s\'est produite pendant la récupération des données')}
-}
-filter()*/
