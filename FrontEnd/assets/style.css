@@ -146,10 +146,21 @@ li:hover {
 
 .gallery img {
 	width: 100%;
+}
 
+.filter-btn{
+	font-family: 'Syne';
+	font-size: 1.2em;
+	font-weight: 700;
+	color: #1D6154;
+	margin : 2em auto ;
+	width: 180px;
+	text-align: center;
+	border-radius: 60px ;
+	border: 1px solid #1D6154;
 }
 #contact {
-	width: 50%;
+	width: 35%;
 margin: auto;
 }
 #contact > * {
@@ -189,6 +200,9 @@ input[type="submit"]{
 	width: 180px;
 	text-align: center;
 	border-radius: 60px ;
+}
+input[type="submit"]:hover{
+	background-color: #0E2F28;
 }
 
 footer nav ul {
