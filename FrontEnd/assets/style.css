@@ -107,7 +107,12 @@ li:hover {
 	color: #B1663C;
 }
 
-ul a {
+.active {
+	color: black;
+	font-weight: 600;
+}
+
+header a {
     text-decoration: none;
     color: inherit;
 }

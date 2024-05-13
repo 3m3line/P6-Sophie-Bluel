@@ -1,3 +1,21 @@
+//effet nav actif
+document.addEventListener("DOMContentLoaded", function() {
+    const currentPathWithAnchor = window.location.pathname + window.location.hash; // Récupère le chemin d'accès de la page actuelle avec l'ancre
+
+    const navLinks = document.querySelectorAll("nav ul li a");
+
+    navLinks.forEach(function(link) {
+        const linkPathWithAnchor = new URL(link.href).pathname + new URL(link.href).hash; // Récupère le chemin d'accès du lien avec l'ancre
+
+        if (linkPathWithAnchor === currentPathWithAnchor) {
+            link.parentElement.classList.add("active");
+        } else {
+            link.parentElement.classList.remove("active");
+        }
+    });
+});
+
+
 //variables appelées
 const gallery = document.querySelector('.gallery');
 const portfolio = document.getElementById('portfolio');
