@@ -51,7 +51,7 @@ function createFilterButtons(categories) {
     //bouton "Tous"
     const ButtonTous = document.createElement('button');
     ButtonTous.textContent = "Tous";
-    ButtonTous.classList.add('filter-button');
+    ButtonTous.classList.add('filter-button','active');
     ButtonTous.dataset.filter = "all"; 
     filterWorkParent.appendChild(ButtonTous);
 
@@ -72,36 +72,37 @@ async function Filtering() {
         const categories = await fetchCategory();
         const filterWorkParent = createFilterButtons(categories);
         const worksData = await fetchWork ();
+        const filterButtons = filterWorkParent.querySelectorAll('.filter-button');
 
-        filterWorkParent.querySelectorAll('.filter-button').forEach(button => {
-            button.addEventListener("click", clickButton);
+        filterButtons.forEach(button => {
+            button.addEventListener("click", function() {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+
+                // Filtrer les travaux en fonction de la catégorie sélectionnée
+                const filterValue = this.dataset.filter;
+                let filteredWorks;
+                if (filterValue === "all") {
+                    filteredWorks = worksData;
+                } else {
+                    filteredWorks = worksData.filter(work => {
+                        return work.category.name.toLowerCase() === filterValue;
+                    });
+                };
+                // Effacer les images actuelles de la galerie
+                gallery.innerHTML = '';
+
+                // Afficher les travaux filtrés
+                filteredWorks.forEach(work => {
+                    const workElement = document.createElement('figure');
+                    gallery.appendChild(workElement);
+                    workElement.innerHTML = `
+                        <img src='${work.imageUrl}' alt='${work.title}' />
+                        <h3>${work.title}</h3>`;
+                });
+            });
         });
 
-        function clickButton() {
-            const filterValue = this.dataset.filter;
-
-            // Filtrer les travaux en fonction de la catégorie sélectionnée
-            let filteredWorks;
-            if (filterValue === "all") {
-                filteredWorks = worksData; 
-            } else {
-                filteredWorks = worksData.filter(work => {
-                    return work.category.name.toLowerCase() === filterValue;
-                });
-            }
-
-            // Effacer les images actuelles de la galerie
-            gallery.innerHTML = '';
-
-            // Afficher les travaux filtrés
-            filteredWorks.forEach(work => {
-                const workElement = document.createElement('figure');
-                gallery.appendChild(workElement);
-                workElement.innerHTML = `
-                    <img src='${work.imageUrl}' alt='${work.title}' />
-                    <h3>${work.title}</h3>`;
-            });
-        }
     } catch (error) {
         console.error('une erreur s\'est produite pendant la récupération des données', error);
     }
