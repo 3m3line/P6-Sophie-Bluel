@@ -237,7 +237,7 @@ input[type="submit"]:hover{
 
 .mtp-lien{
 	color: inherit;
-	border-bottom: 1px solid;
+	/* border-bottom: 1px solid; */
 }
 
 #LogIn {
@@ -249,4 +249,10 @@ footer nav ul {
 	justify-content: flex-end;
 	margin: 2em
 }
+
+footer a {
+	text-decoration: none;
+    color: inherit;
+}
+
 
