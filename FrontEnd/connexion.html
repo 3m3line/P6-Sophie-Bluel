@@ -34,12 +34,13 @@
     <main>
       <section id="LogIn">
         <h1>Log In</h1>
-        <form action="/login" method="post">
+        <form action="/login" method="post" id="loginForm">
           <label for="email">Email</label>
           <input type="text" name="email" id="email" />
           <label for="MTP">Mot de passe</label>
           <input type="password" name="MTP" id="MTP" />
           <input type="submit" value="Se connecter" />
+          <p id="message"></p>
         </form>
         <p><a class="mtp-lien" href="">Mot de passe oublié</a></p>
       </section>
