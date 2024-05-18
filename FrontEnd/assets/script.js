@@ -129,43 +129,42 @@ async function Filtering() {
 Filtering();
 
 //connexion
-document.getElementById('loginForm').addEventListener('submit', function(event) {
+document.getElementById('loginForm').addEventListener('submit', async(event)=> {
     event.preventDefault();
     
     const email = document.getElementById('email').value;
     const password = document.getElementById('MTP').value;
 
-    // Prepare la data qui va être envoyée
-    const loginData = {
-        email: email,
-        password: password
-    };
-
     // Envoi le POST request à l'API
-    fetch('http://localhost:5678/api/users/login', {
+    try {
+       const response = await fetch ("http://localhost:5678/api/users/login", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(loginData)
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(error => { throw new Error(error.message); });
+        body: JSON.stringify({email,password})
+        });
+        
+
+        if (response.status === 200) {
+                const data = await response.json();
+                window.location.href = "index.html";
+                document.getElementById('message').textContent = 'Connexion réussie !';
+                const idtoken = data.token;
         }
-        return response.json();
-    })
-    .then(data => {
-        if (data.success) {
-            document.getElementById('message').textContent = 'Connexion réussie !';
-            document.getElementById('message').style.color = 'green';
-            // Here you can handle the successful login, e.g., redirect to another page
-        } else {
-            document.getElementById('message').textContent = 'L\'email ou le mot de passe est invalide';
+
+        if (response.status === 404) {
+            const data = await response.json();
+            document.getElementById('message').textContent = 'L\'email est invalide'
         }
-    })
-    .catch(error => {
+
+        else {
+            document.getElementById('message').textContent = 'Le mot de passe est invalide';
+        }
+    }
+    
+    catch(error) {
         console.error('There was a problem with the fetch operation:', error);
         document.getElementById('message').textContent = 'Une erreur a eu lieu, merci d\'essayer de nouveau';
-    });
+    };
 });
