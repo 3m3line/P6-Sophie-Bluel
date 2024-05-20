@@ -112,7 +112,8 @@ li:hover {
 	font-weight: 600;
 }
 
-header a {
+header a,
+#portfolio a {
     text-decoration: none;
     color: inherit;
 }
@@ -140,9 +141,25 @@ header a {
 #introduction p {
 	margin-bottom: 0.5em;
 }
-#portfolio h2 {
-	text-align: center;
+
+.entete-portfolio{
+	display: flex;
+	align-items: center;
 	margin-bottom: 1.5em;
+	position: relative;
+	
+}
+#portfolio h2 {
+	margin-left: auto;
+  	margin-right: auto;
+}
+#editSection{
+	align-items: center;
+	position: absolute;
+	right: 50%;
+	transform: translateX(15vw);
+	gap: 1em;
+	
 }
 
 #portfolio h3 {
@@ -238,6 +255,9 @@ input[type="submit"]:hover{
 .mtp-lien{
 	color: inherit;
 	/* border-bottom: 1px solid; */
+}
+#message{
+	margin-top: 2em;
 }
 
 #LogIn {

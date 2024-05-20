@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function() {
 //variables appelées
 const gallery = document.querySelector('.gallery');
 const portfolio = document.getElementById('portfolio');
-const h2Portfolio = document.querySelector('#portfolio h2');
+const editSectionPortfolio = document.querySelector('.entete-portfolio');
 
 // code pour gallery
 async function fetchWork() {
@@ -64,7 +64,7 @@ function createFilterButtons(categories) {
     const filterWorkParent = document.createElement('div');
     filterWorkParent.classList.add('filter');
     portfolio.appendChild(filterWorkParent);
-    h2Portfolio.insertAdjacentElement('afterend',filterWorkParent );
+    editSectionPortfolio.insertAdjacentElement('afterend',filterWorkParent );
 
     //bouton "Tous"
     const ButtonTous = document.createElement('button');
@@ -148,18 +148,21 @@ document.getElementById('loginForm').addEventListener('submit', async(event)=> {
 
         if (response.status === 200) {
                 const data = await response.json();
-                window.location.href = "index.html";
                 document.getElementById('message').textContent = 'Connexion réussie !';
-                const idtoken = data.token;
+                const token = sessionStorage.getItem('authToken');
+                sessionStorage.setItem('authToken', data.token);
+                window.location.href = "index.html";
         }
 
         if (response.status === 404) {
             const data = await response.json();
-            document.getElementById('message').textContent = 'L\'email est invalide'
+            document.getElementById('message').textContent = 'L\'email ou le mot de passe est invalide';
+            document.getElementById('message').style.color = 'red';
         }
 
         else {
             document.getElementById('message').textContent = 'Le mot de passe est invalide';
+            document.getElementById('message').style.color = 'red';
         }
     }
     
@@ -168,3 +171,23 @@ document.getElementById('loginForm').addEventListener('submit', async(event)=> {
         document.getElementById('message').textContent = 'Une erreur a eu lieu, merci d\'essayer de nouveau';
     };
 });
+
+
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    const navConnexion = document.getElementById('navConnexion');
+    const token = sessionStorage.getItem('authToken');
+    if (token) {
+        // L'utilisateur est authentifié, afficher les éléments d'édition
+        document.getElementById('editSection').style.display = 'flex';
+        navConnexion.textContent = "logout";
+        navConnexion.href = "#";
+
+    } else {
+        // L'utilisateur n'est pas authentifié, masquer les éléments d'édition
+        document.getElementById('editSection').style.display = 'none';
+        navConnexion.textContent = "login";
+    }
+});
+
+//pour supprimer conservation donnés lors déconnexion sessionStorage.clear();
