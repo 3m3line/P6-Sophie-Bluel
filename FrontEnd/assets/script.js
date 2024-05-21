@@ -146,22 +146,22 @@ document.getElementById('loginForm').addEventListener('submit', async(event)=> {
         });
         
 
-        if (response.status === 200) {
+        if (response.ok) {
                 const data = await response.json();
                 document.getElementById('message').textContent = 'Connexion réussie !';
-                const token = sessionStorage.getItem('authToken');
+                document.getElementById('message').style.color = '#1D6154';
                 sessionStorage.setItem('authToken', data.token);
-                window.location.href = "index.html";
+                //window.location.href = "index.html";
         }
 
-        if (response.status === 404) {
-            const data = await response.json();
-            document.getElementById('message').textContent = 'L\'email ou le mot de passe est invalide';
-            document.getElementById('message').style.color = 'red';
-        }
+        //  else if (response.status === 401) {
+        //      const data = await response.json();
+        //      document.getElementById('message').textContent = 'Le mot de passe est invalide';
+        //      document.getElementById('message').style.color = 'red';
+        // }
 
         else {
-            document.getElementById('message').textContent = 'Le mot de passe est invalide';
+            document.getElementById('message').textContent = 'L\'email ou le mot de passe est invalide';
             document.getElementById('message').style.color = 'red';
         }
     }
@@ -173,21 +173,35 @@ document.getElementById('loginForm').addEventListener('submit', async(event)=> {
 });
 
 
-
-document.addEventListener('DOMContentLoaded', (event) => {
+function Edit () {
     const navConnexion = document.getElementById('navConnexion');
     const token = sessionStorage.getItem('authToken');
-    if (token) {
-        // L'utilisateur est authentifié, afficher les éléments d'édition
-        document.getElementById('editSection').style.display = 'flex';
-        navConnexion.textContent = "logout";
-        navConnexion.href = "#";
+    const tokenValid = !!token
+    document.getElementById('editSection').style.display = 'flex';
+    navConnexion.textContent = "logout";
+    navConnexion.href = "#";
+    document.querySelector('.filter').style.display = 'none';
+}
 
-    } else {
-        // L'utilisateur n'est pas authentifié, masquer les éléments d'édition
-        document.getElementById('editSection').style.display = 'none';
-        navConnexion.textContent = "login";
-    }
-});
+Edit ()
+
+// document.addEventListener('DOMContentLoaded', (event) => {
+//     const navConnexion = document.getElementById('navConnexion');
+//     const token = sessionStorage.getItem('authToken');
+//     const tokenValid = !!token
+//     console.log (token, tokenValid)
+//     if (tokenValid) {
+//         // L'utilisateur est authentifié, afficher les éléments d'édition
+//         document.getElementById('editSection').style.display = 'flex';
+//         navConnexion.textContent = "logout";
+//         navConnexion.href = "#";
+//         document.querySelector('.filter').style.display = 'none';
+
+//     } else {
+//         // L'utilisateur n'est pas authentifié, masquer les éléments d'édition
+//         document.getElementById('editSection').style.display = 'none';
+//         navConnexion.textContent = "login";
+//     }
+// });
 
 //pour supprimer conservation donnés lors déconnexion sessionStorage.clear();
