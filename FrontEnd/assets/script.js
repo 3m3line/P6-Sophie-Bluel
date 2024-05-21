@@ -61,10 +61,7 @@ async function fetchCategory() {
 }
 
 function createFilterButtons(categories) {
-    const filterWorkParent = document.createElement('div');
-    filterWorkParent.classList.add('filter');
-    portfolio.appendChild(filterWorkParent);
-    editSectionPortfolio.insertAdjacentElement('afterend',filterWorkParent );
+    const filterWorkParent = document.getElementById('filter')
 
     //bouton "Tous"
     const ButtonTous = document.createElement('button');
@@ -128,80 +125,49 @@ async function Filtering() {
 
 Filtering();
 
-//connexion
-document.getElementById('loginForm').addEventListener('submit', async(event)=> {
-    event.preventDefault();
-    
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('MTP').value;
-
-    // Envoi le POST request à l'API
-    try {
-       const response = await fetch ("http://localhost:5678/api/users/login", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({email,password})
-        });
-        
-
-        if (response.ok) {
-                const data = await response.json();
-                document.getElementById('message').textContent = 'Connexion réussie !';
-                document.getElementById('message').style.color = '#1D6154';
-                sessionStorage.setItem('authToken', data.token);
-                //window.location.href = "index.html";
-        }
-
-        //  else if (response.status === 401) {
-        //      const data = await response.json();
-        //      document.getElementById('message').textContent = 'Le mot de passe est invalide';
-        //      document.getElementById('message').style.color = 'red';
-        // }
-
-        else {
-            document.getElementById('message').textContent = 'L\'email ou le mot de passe est invalide';
-            document.getElementById('message').style.color = 'red';
-        }
-    }
-    
-    catch(error) {
-        console.error('There was a problem with the fetch operation:', error);
-        document.getElementById('message').textContent = 'Une erreur a eu lieu, merci d\'essayer de nouveau';
-    };
-});
-
+//Edition après connexion et déconnexion
 
 function Edit () {
     const navConnexion = document.getElementById('navConnexion');
     const token = sessionStorage.getItem('authToken');
     const tokenValid = !!token
-    document.getElementById('editSection').style.display = 'flex';
-    navConnexion.textContent = "logout";
-    navConnexion.href = "#";
-    document.querySelector('.filter').style.display = 'none';
-}
+    console.log (token, tokenValid)
 
-Edit ()
+    if (tokenValid) {
+    // L'utilisateur est authentifié, afficher les éléments d'édition
+        document.getElementById('filter').style.display = 'none';
+        document.getElementById('editSection').style.display = 'flex';
+        navConnexion.textContent = "logout";
+        navConnexion.href = "#";
 
-// document.addEventListener('DOMContentLoaded', (event) => {
-//     const navConnexion = document.getElementById('navConnexion');
-//     const token = sessionStorage.getItem('authToken');
-//     const tokenValid = !!token
-//     console.log (token, tokenValid)
-//     if (tokenValid) {
-//         // L'utilisateur est authentifié, afficher les éléments d'édition
-//         document.getElementById('editSection').style.display = 'flex';
-//         navConnexion.textContent = "logout";
-//         navConnexion.href = "#";
-//         document.querySelector('.filter').style.display = 'none';
+        // déconnexion au clic
+        navConnexion.addEventListener('click', function(event){
+            event.preventDefault()
+            sessionStorage.clear();
+            Edit();
+            console.log ('event fonctionne')
+        })
 
-//     } else {
-//         // L'utilisateur n'est pas authentifié, masquer les éléments d'édition
-//         document.getElementById('editSection').style.display = 'none';
-//         navConnexion.textContent = "login";
+    } else {
+    // L'utilisateur n'est pas authentifié, masquer les éléments d'édition
+        document.getElementById('filter').style.display = 'block'
+        document.getElementById('editSection').style.display = 'none';
+        navConnexion.textContent = "login";
+        navConnexion.href = "./connexion.html";
+        navConnexion.removeEventListener('click', Edit);
+    }
+};
+
+Edit ();
+
+// const logOut = document.getElementById('navConnexion')
+
+// logOut.addEventListener("click", function() {
+//     if (logOut.textContent === "logout"){
+//         sessionStorage.clear();
+//         location.reload();
 //     }
 // });
+
 
 //pour supprimer conservation donnés lors déconnexion sessionStorage.clear();
