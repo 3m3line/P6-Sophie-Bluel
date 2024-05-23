@@ -160,14 +160,72 @@ function Edit () {
 
 Edit ();
 
-// const logOut = document.getElementById('navConnexion')
+//modale
+async function createModaleEdit () {
+    const modaleEdit = document.getElementById('modaleEdit');
+    modaleEdit.classList.add('modaleEdit');
+    const contenantModale = document.createElement('div');
+    contenantModale.classList.add('contenantModale');
+    modaleEdit.appendChild(contenantModale);
 
-// logOut.addEventListener("click", function() {
-//     if (logOut.textContent === "logout"){
-//         sessionStorage.clear();
-//         location.reload();
-//     }
-// });
+    //header modale
+    const headerModale = document.createElement('div');
+    headerModale.classList.add('headerModale');
+    contenantModale.appendChild(headerModale);
+    const exitModale = document.createElement('img');
+    exitModale.classList.add('exitModale');
+    exitModale.src = './assets/icons/croix.png';
+    exitModale.alt = 'Croix de fermeture';
+    headerModale.appendChild(exitModale);
+
+    //fermeture modale
+    exitModale.addEventListener('click', function(){
+        closeModale();
+    });
+
+    //titre
+    const titreModale = document.createElement('h2');
+    titreModale.classList.add('titreModale');
+    titreModale.textContent="Galerie photo";
+    contenantModale.appendChild(titreModale);
+
+    //gallery
+    const galleryModaleFetch = await fetchWork ();
+    const galleryModale = document.createElement('div');
+    galleryModale.classList.add('galleryModale');
+    contenantModale.appendChild(galleryModale);
+    galleryModaleFetch.forEach(work => {
+        const galleryModaleElement = document.createElement('figure');
+        galleryModale.appendChild(galleryModaleElement);
+        galleryModaleElement.innerHTML = `
+                <img src='${work.imageUrl}' alt='${work.title}' id='galleryimage'/>
+                <img src='./assets/icons/poubelle.png' alt ='poubelle' id='gallerypoubelle'/>`
+    });
+    
+    //barre séparation
+    const barreModale = document.createElement('div');
+    
+    barreModale.classList.add('barreModale');
+    contenantModale.appendChild(barreModale);
+
+    //bouton ajouter une photo
+    const buttonModale = document.createElement('button');
+    buttonModale.textContent="Ajouter une photo";
+    buttonModale.classList.add('buttonModale');
+    contenantModale.appendChild(buttonModale);
+}
 
 
-//pour supprimer conservation donnés lors déconnexion sessionStorage.clear();
+
+document.getElementById('editSection').addEventListener('click', function(){
+    createModaleEdit ()
+})
+
+function closeModale () {
+    const contenantModale = document.getElementsByClassName('contenantModale')[0];
+    while (contenantModale.firstChild) {
+        contenantModale.removeChild(contenantModale.firstChild);
+    }
+    const modaleEdit = document.getElementById('modaleEdit');
+    modaleEdit.classList.remove('modaleEdit');
+}
