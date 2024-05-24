@@ -14,7 +14,44 @@
     <link rel="stylesheet" href="./assets/style.css" />
   </head>
   <body>
-    <div id="modaleEdit"></div>
+    <aside id="modaleEdit">
+      <div id="contenantModale">
+        <div class="headerModale">
+          <img
+            id="returnArrowModale"
+            src="./assets/icons/arrow-left-solid.png"
+            alt="flèche retour"
+          />
+          <img
+            id="exitModale"
+            src="./assets/icons/croix.png"
+            alt="Croix de fermeture"
+          />
+        </div>
+        <h2 class="titreModale">Galerie Photo</h2>
+        <div id="galleryModale" class="galleryModale"></div>
+        <form id="formulaireModale" class="formulaireModale">
+          <label for="image">
+            <img src="./assets/icons/picture.png" alt="Picture" />
+            <button id="imageButton">+ Ajouter photo</button>
+            <span>jpg, png : 4mo max</span>
+            <input id="imageInput" type="file" accept="image/*" />
+            <div id="imagePreview"></div>
+          </label>
+          <label for="titre">Titre</label>
+          <input type="text" name="titre" id="titre" />
+          <label for="categorie">Catégorie</label>
+          <select type="categorie" name="categorie" id="categorie">
+            <option value="option1">Option 1</option>
+            <option value="option2">Option 2</option>
+          </select>
+        </form>
+        <div class="barreModale"></div>
+        <button class="buttonModale" id="buttonModale">
+          Ajouter une photo
+        </button>
+      </div>
+    </aside>
     <div class="main-container">
       <header>
         <a href="./index.html"
@@ -60,7 +97,7 @@
         <section id="portfolio">
           <div class="entete-portfolio">
             <h2>Mes Projets</h2>
-            <a href="#" id="editSection"
+            <a href="#modaleEdit" id="editSection"
               ><img src="./assets/icons/edit-icon.png" alt="Icone d'édition" />
               <p>modifier</p></a
             >

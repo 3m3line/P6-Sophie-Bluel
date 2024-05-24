@@ -160,72 +160,81 @@ function Edit () {
 
 Edit ();
 
-//modale
-async function createModaleEdit () {
-    const modaleEdit = document.getElementById('modaleEdit');
-    modaleEdit.classList.add('modaleEdit');
-    const contenantModale = document.createElement('div');
-    contenantModale.classList.add('contenantModale');
-    modaleEdit.appendChild(contenantModale);
-
-    //header modale
-    const headerModale = document.createElement('div');
-    headerModale.classList.add('headerModale');
-    contenantModale.appendChild(headerModale);
-    const exitModale = document.createElement('img');
-    exitModale.classList.add('exitModale');
-    exitModale.src = './assets/icons/croix.png';
-    exitModale.alt = 'Croix de fermeture';
-    headerModale.appendChild(exitModale);
-
-    //fermeture modale
-    exitModale.addEventListener('click', function(){
-        closeModale();
-    });
-
-    //titre
-    const titreModale = document.createElement('h2');
-    titreModale.classList.add('titreModale');
-    titreModale.textContent="Galerie photo";
-    contenantModale.appendChild(titreModale);
-
-    //gallery
-    const galleryModaleFetch = await fetchWork ();
-    const galleryModale = document.createElement('div');
-    galleryModale.classList.add('galleryModale');
-    contenantModale.appendChild(galleryModale);
-    galleryModaleFetch.forEach(work => {
+////MODALE
+//modale galerie photo
+async function galleryModaleFetch (){
+    const ModaleFetch = await fetchWork ();
+    const galleryModale = document.getElementById('galleryModale');
+    ModaleFetch.forEach(work => {
         const galleryModaleElement = document.createElement('figure');
         galleryModale.appendChild(galleryModaleElement);
         galleryModaleElement.innerHTML = `
                 <img src='${work.imageUrl}' alt='${work.title}' id='galleryimage'/>
                 <img src='./assets/icons/poubelle.png' alt ='poubelle' id='gallerypoubelle'/>`
     });
-    
-    //barre séparation
-    const barreModale = document.createElement('div');
-    
-    barreModale.classList.add('barreModale');
-    contenantModale.appendChild(barreModale);
-
-    //bouton ajouter une photo
-    const buttonModale = document.createElement('button');
-    buttonModale.textContent="Ajouter une photo";
-    buttonModale.classList.add('buttonModale');
-    contenantModale.appendChild(buttonModale);
 }
+galleryModaleFetch ()
 
-
-
-document.getElementById('editSection').addEventListener('click', function(){
-    createModaleEdit ()
-})
-
-function closeModale () {
-    const contenantModale = document.getElementsByClassName('contenantModale')[0];
-    while (contenantModale.firstChild) {
-        contenantModale.removeChild(contenantModale.firstChild);
-    }
+function createGalleryModale (event) {
+    event.preventDefault();
     const modaleEdit = document.getElementById('modaleEdit');
-    modaleEdit.classList.remove('modaleEdit');
+    const exitModale = document.getElementById('exitModale');
+    const formulaireModale = document.getElementById('formulaireModale');
+    const galleryModale = document.getElementById('galleryModale');
+    const returnArrowModale = document.getElementById('returnArrowModale')
+
+    modaleEdit.style.display = "flex";
+    formulaireModale.style.display = "none";
+    galleryModale.style.display = "grid";
+
+    //flèche retour
+    returnArrowModale.style.display = "none";
+    const headerModale = document.getElementsByClassName('headerModale')[0];
+    headerModale.style.width = '';
+
+    //fermeture modale
+    exitModale.addEventListener('click', function(){
+        modaleEdit.style.display = "none";
+    });    
 }
+
+document.getElementById('editSection').addEventListener('click', function(event){
+    createGalleryModale(event);
+});
+
+//modale ajout photo
+function createAjoutPhotoModale (event){
+    event.preventDefault();
+    const modaleEdit = document.getElementById('modaleEdit');
+    const exitModale = document.getElementById('exitModale');
+    const galleryModale = document.getElementById('galleryModale');
+    const returnArrowModale = document.getElementById('returnArrowModale')
+
+    modaleEdit.style.display = "flex";
+    galleryModale.style.display = "none";
+    formulaireModale.style.display = "flex";
+
+    //flèche retour
+    returnArrowModale.style.display = "block";
+    const headerModale = document.getElementsByClassName('headerModale')[0];
+    headerModale.style.width = "100%";
+
+    //changement titre
+    const titreModale = document.getElementsByClassName('titreModale')[0];
+    titreModale.textContent="Ajout photo";
+
+    //chargement image
+    const imageButton = document.getElementById('imageButton');
+    const imageInput = document.getElementById('imageInput');
+    imageButton.addEventListener('click', function() {
+        imageInput.click();
+    });
+}
+
+document.getElementById('buttonModale').addEventListener('click', function(event){
+    createAjoutPhotoModale (event) ;
+});
+
+document.getElementById('returnArrowModale').addEventListener('click', function(event){
+    createGalleryModale(event);
+});
