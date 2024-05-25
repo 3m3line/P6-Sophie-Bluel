@@ -269,7 +269,7 @@ function createAjoutPhotoModale (event){
     const buttonModale = document.getElementById('buttonModale');
     buttonModale.classList.remove('buttonModale');
     buttonModale.classList.add('buttonModaleInactif');
-    buttonModale.textContent="valider";
+    buttonModale.textContent="Valider";
     const validateButtonState = () => {
         if (FormModaleValid()) {
             buttonModale.classList.remove('buttonModaleInactif');
@@ -279,6 +279,7 @@ function createAjoutPhotoModale (event){
             buttonModale.classList.add('buttonModaleInactif');
         }
     };
+
     imageInput.addEventListener('change', function() {
         validateButtonState();
         console.log('Input value a changé pour:', this.value);
@@ -306,4 +307,67 @@ document.getElementById('returnArrowModale').addEventListener('click', function(
 });
 
 //Envoi nouveaux travaux
+// const buttonModaleValider = document.getElementById('buttonModale');
 
+// document.addEventListener('click', function(event) {
+//     if ( event.target.id === 'buttonModale' && event.target.textContent === "Valider" && event.target.classList.contains("buttonModale")) {
+//                      let formData = new FormData();
+//                      formData.append('title', document.getElementById('titre').value);
+//                      formData.append('image', document.getElementById('imageInput').files[0]);
+//                      formData.append('category', document.getElementById('categorie').value);
+            
+                     
+            
+//                      // Requête AJAX pour envoyer les données au serveur
+//                      let xhr = new XMLHttpRequest();
+//                      xhr.open('POST', 'http://localhost:5678/api/works');
+            
+//                      const token = sessionStorage.getItem('authToken');
+//                      console.log(token)
+//                      xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+            
+//                      xhr.onload = function() {
+//                          if (xhr.status === 201) {
+//                              // Réponse du serveur
+//                              console.log(xhr.responseText);
+//                              console.log('Données envoyées avec succès !');
+//                          } else {
+//                              // Gestion des erreurs
+//                              document.getElementById('messageModale').textContent = 'Une erreur est survenue lors de l\'envoi des données.';
+//                              console.error('Une erreur est survenue lors de l\'envoi des données.');
+//                          }
+//                      };
+//                      xhr.send(formData);
+//              }})
+
+
+// if (buttonModaleValider.textContent === "Valider" && buttonModaleValider.classList.contains("buttonModale")){
+// buttonModaleValider.addEventListener('click', function() {
+//          let formData = new FormData();
+//          formData.append('title', document.getElementById('titre').value);
+//          formData.append('image', document.getElementById('imageInput').files[0]);
+//          formData.append('category', document.getElementById('categorie').value);
+
+         
+
+//          // Requête AJAX pour envoyer les données au serveur
+//          let xhr = new XMLHttpRequest();
+//          xhr.open('POST', 'http://localhost:5678/api/works');
+
+//          const token = sessionStorage.getItem('authToken');
+//          console.log(token)
+//          xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+
+//          xhr.onload = function() {
+//              if (xhr.status === 201) {
+//                  // Réponse du serveur
+//                  console.log(xhr.responseText);
+//                  console.log('Données envoyées avec succès !');
+//              } else {
+//                  // Gestion des erreurs
+//                  document.getElementById('messageModale').textContent = 'Une erreur est survenue lors de l\'envoi des données.';
+//                  console.error('Une erreur est survenue lors de l\'envoi des données.');
+//              }
+//          };
+//          xhr.send(formData);
+//  });}
