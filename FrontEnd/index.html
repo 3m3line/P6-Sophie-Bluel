@@ -31,7 +31,7 @@
         <h2 class="titreModale">Galerie Photo</h2>
         <div id="galleryModale" class="galleryModale"></div>
         <form id="formulaireModale" class="formulaireModale">
-          <label for="image">
+          <label for="image" id="imageFormulaireModale">
             <img src="./assets/icons/picture.png" alt="Picture" />
             <button id="imageButton">+ Ajouter photo</button>
             <span>jpg, png : 4mo max</span>
@@ -42,8 +42,13 @@
           <input type="text" name="titre" id="titre" />
           <label for="categorie">Catégorie</label>
           <select type="categorie" name="categorie" id="categorie">
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
+            <option
+              id="categoryVide"
+              value=""
+              disabled
+              selected
+              hidden
+            ></option>
           </select>
         </form>
         <div class="barreModale"></div>

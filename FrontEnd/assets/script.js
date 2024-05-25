@@ -195,6 +195,7 @@ function createGalleryModale (event) {
     //fermeture modale
     exitModale.addEventListener('click', function(){
         modaleEdit.style.display = "none";
+        document.getElementById('categorie').selectedIndex = 0;
     });    
 }
 
@@ -203,6 +204,19 @@ document.getElementById('editSection').addEventListener('click', function(event)
 });
 
 //modale ajout photo
+
+async function createCategoryModale () {
+    const fetchCategoryModale = await fetchCategory();
+    const CategoryModale = document.getElementById('categorie');
+    fetchCategoryModale.forEach(category => {
+        const CategoryModaleElement = document.createElement("option")
+        CategoryModaleElement.value= category.name;
+        CategoryModaleElement.text = category.name;
+        CategoryModale.appendChild(CategoryModaleElement);
+    })
+}
+createCategoryModale ()
+
 function createAjoutPhotoModale (event){
     event.preventDefault();
     const modaleEdit = document.getElementById('modaleEdit');
@@ -229,6 +243,8 @@ function createAjoutPhotoModale (event){
     imageButton.addEventListener('click', function() {
         imageInput.click();
     });
+
+    //bouton non actif
 }
 
 document.getElementById('buttonModale').addEventListener('click', function(event){
