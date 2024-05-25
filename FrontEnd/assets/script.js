@@ -195,13 +195,23 @@ function createGalleryModale (event) {
     //fermeture modale
     exitModale.addEventListener('click', function(){
         modaleEdit.style.display = "none";
+        document.getElementById('imageFormulaireModale').value="";
         document.getElementById('categorie').selectedIndex = 0;
-    });    
+        document.getElementById('titre').value="";
+    });
+
+    //titre
+    const titreModale = document.getElementsByClassName('titreModale')[0];
+    titreModale.textContent="Galerie Photo";
+    
+    //bouton
+    const buttonModale = document.getElementById('buttonModale');
+    buttonModale.classList.remove('buttonModaleInactif');
+    buttonModale.classList.add('buttonModale');
+    buttonModale.textContent="Ajouter une photo";
 }
 
-document.getElementById('editSection').addEventListener('click', function(event){
-    createGalleryModale(event);
-});
+document.getElementById('editSection').addEventListener('click', createGalleryModale);
 
 //modale ajout photo
 
@@ -216,6 +226,16 @@ async function createCategoryModale () {
     })
 }
 createCategoryModale ()
+
+function FormModaleValid() {
+    const imageModale = document.getElementById('imageInput').value;
+    const titreInput = document.getElementById('titre').value;
+    const categorie = document.getElementById('categorie').value;
+    if (!imageModale || !titreInput || !categorie) {
+         return false;
+     }
+    return true;
+}
 
 function createAjoutPhotoModale (event){
     event.preventDefault();
@@ -240,17 +260,50 @@ function createAjoutPhotoModale (event){
     //chargement image
     const imageButton = document.getElementById('imageButton');
     const imageInput = document.getElementById('imageInput');
-    imageButton.addEventListener('click', function() {
+    imageButton.addEventListener('click', function(event) {
         imageInput.click();
+        event.preventDefault();
     });
 
     //bouton non actif
+    const buttonModale = document.getElementById('buttonModale');
+    buttonModale.classList.remove('buttonModale');
+    buttonModale.classList.add('buttonModaleInactif');
+    buttonModale.textContent="valider";
+    const validateButtonState = () => {
+        if (FormModaleValid()) {
+            buttonModale.classList.remove('buttonModaleInactif');
+            buttonModale.classList.add('buttonModale');
+        } else {
+            buttonModale.classList.remove('buttonModale');
+            buttonModale.classList.add('buttonModaleInactif');
+        }
+    };
+    imageInput.addEventListener('change', function() {
+        validateButtonState();
+        console.log('Input value a changé pour:', this.value);
+    });
+    
+    document.getElementById('titre').addEventListener('input', function() {
+        validateButtonState();
+        console.log('La valeur du titre a changé pour:', this.value);
+    });
+    
+    document.getElementById('categorie').addEventListener('change', function() {
+        validateButtonState();
+        console.log('La catégorie a changé pour:', this.value);
+    });
 }
 
 document.getElementById('buttonModale').addEventListener('click', function(event){
     createAjoutPhotoModale (event) ;
+    event.preventDefault();
 });
 
 document.getElementById('returnArrowModale').addEventListener('click', function(event){
-    createGalleryModale(event);
+    createGalleryModale (event) ;
+    event.preventDefault();
 });
+
+//Envoi nouveaux travaux
+

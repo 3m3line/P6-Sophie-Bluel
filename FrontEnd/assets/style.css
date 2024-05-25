@@ -244,6 +244,7 @@ header, footer, #introduction, #portfolio, #contact{
 	flex-direction: column;
 	align-items: center;
 	border-radius: 5px;
+	margin: 0;
 }
 #imageFormulaireModale img{
 	width: 76px;
