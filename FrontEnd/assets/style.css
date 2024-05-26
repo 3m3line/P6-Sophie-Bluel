@@ -246,7 +246,7 @@ header, footer, #introduction, #portfolio, #contact{
 	border-radius: 5px;
 	margin: 0;
 }
-#imageFormulaireModale img{
+#iconeImageModale{
 	width: 76px;
 	margin: 2em 0 1em;
 }
@@ -266,9 +266,12 @@ header, footer, #introduction, #portfolio, #contact{
 	font-weight: 400;
 }
 
-#formulaireModale input[type="file"] {
+#imageInput {
 	display: none;
   }
+#imagePreview img{
+	height: 169px;
+}
 
 .barreModale{
 	width: 100%;

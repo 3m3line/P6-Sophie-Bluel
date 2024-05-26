@@ -126,7 +126,6 @@ async function Filtering() {
 Filtering();
 
 //Edition après connexion et déconnexion
-
 function Edit () {
     const navConnexion = document.getElementById('navConnexion');
     const token = sessionStorage.getItem('authToken');
@@ -146,6 +145,8 @@ function Edit () {
             sessionStorage.clear();
             Edit();
             console.log ('event fonctionne')
+            navConnexion.href = "./connexion.html";
+            navConnexion.removeEventListener('click', Edit);
         })
 
     } else {
@@ -153,8 +154,11 @@ function Edit () {
         document.getElementById('filter').style.display = 'block'
         document.getElementById('editSection').style.display = 'none';
         navConnexion.textContent = "login";
-        navConnexion.href = "./connexion.html";
+        // navConnexion.href = "./connexion.html";
         navConnexion.removeEventListener('click', Edit);
+        navConnexion.addEventListener('click', function(event){
+            window.location.href = "./connexion.html"
+        })
     }
 };
 
@@ -181,12 +185,15 @@ function createGalleryModale (event) {
     const exitModale = document.getElementById('exitModale');
     const formulaireModale = document.getElementById('formulaireModale');
     const galleryModale = document.getElementById('galleryModale');
-    const returnArrowModale = document.getElementById('returnArrowModale')
+    const returnArrowModale = document.getElementById('returnArrowModale');
+    const messageModale = document.getElementById('messageModale');
+    const imageInput = document.getElementById('imageInput');
 
     modaleEdit.style.display = "flex";
     formulaireModale.style.display = "none";
     galleryModale.style.display = "grid";
-
+    messageModale.textContent="";
+    
     //flèche retour
     returnArrowModale.style.display = "none";
     const headerModale = document.getElementsByClassName('headerModale')[0];
@@ -195,10 +202,18 @@ function createGalleryModale (event) {
     //fermeture modale
     exitModale.addEventListener('click', function(){
         modaleEdit.style.display = "none";
-        document.getElementById('imageFormulaireModale').value="";
         document.getElementById('categorie').selectedIndex = 0;
         document.getElementById('titre').value="";
         history.replaceState(null, null, 'index.html');
+        messageModale.textContent="";
+        buttonModaleValider.removeEventListener('click', SentNewProjetModale);
+        document.getElementById('imagePreview').innerHTML = "";
+        imageInput.value = "";
+        imageInput.removeEventListener('change', loadingPreviewImage);
+        document.getElementById('iconeImageModale').style.display="block";
+        document.getElementById('imageButtonInput').style.display="block";
+        document.getElementById('infoImageModale').style.display="block";
+        
     });
 
     //titre
@@ -239,13 +254,44 @@ function FormModaleValid() {
     return true;
 }
 
+function loadingPreviewImage() {
+    const imagePreview = document.getElementById('imagePreview');
+    const infoImageModale = document.getElementById('infoImageModale');
+    const iconeImageModale = document.getElementById('iconeImageModale');
+    const imageButtonPreview = document.getElementById('imageButtonInput');
+
+    if (this.files && this.files[0]) {
+        const reader = new FileReader();
+
+        // création preview après chargement image
+        reader.onload = function(e) {
+            
+            const img = document.createElement('img');
+            img.src = e.target.result;
+
+            imageButtonPreview.style.display = 'none';
+            infoImageModale.style.display = 'none';
+            iconeImageModale.style.display = 'none';
+
+            imagePreview.appendChild(img);
+            imagePreview.style.display = 'flex';
+        };
+    
+
+        // Lire le contenu du fichier en tant qu'URL de données
+        reader.readAsDataURL(this.files[0]);
+    }
+};
+
 function createAjoutPhotoModale (event){
     event.preventDefault();
     const modaleEdit = document.getElementById('modaleEdit');
     const exitModale = document.getElementById('exitModale');
     const galleryModale = document.getElementById('galleryModale');
     const formulaireModale = document.getElementById('formulaireModale');
-    const returnArrowModale = document.getElementById('returnArrowModale')
+    const returnArrowModale = document.getElementById('returnArrowModale');
+    const imageInput = document.getElementById('imageInput');
+    const imageButtonInput = document.getElementById('imageButtonInput');
 
     modaleEdit.style.display = "flex";
     galleryModale.style.display = "none";
@@ -261,9 +307,7 @@ function createAjoutPhotoModale (event){
     titreModale.textContent="Ajout photo";
 
     //chargement image
-    const imageButton = document.getElementById('imageButton');
-    const imageInput = document.getElementById('imageInput');
-    imageButton.addEventListener('click', function(event) {
+    imageButtonInput.addEventListener('click', function(event) {
         imageInput.click();
         event.preventDefault();
     });
@@ -285,9 +329,11 @@ function createAjoutPhotoModale (event){
         }
     };
 
+    //suivi changement formulaire
     imageInput.addEventListener('change', function() {
+        loadingPreviewImage.call(this);
         validateButtonState();
-        console.log('Input value a changé pour:', this.value);
+        console.log('La valeur de l\'entrée a été modifiée:', this.value);
     });
     
     document.getElementById('titre').addEventListener('input', function() {
@@ -299,6 +345,9 @@ function createAjoutPhotoModale (event){
         validateButtonState();
         console.log('La catégorie a changé pour:', this.value);
     });
+
+    //envoi formulaire
+    buttonModaleValider.addEventListener('click', SentNewProjetModale);
 }
 
 document.getElementById('buttonModale').addEventListener('click', function(event){
@@ -314,14 +363,18 @@ document.getElementById('returnArrowModale').addEventListener('click', function(
 //Envoi nouveaux travaux
 const buttonModaleValider = document.getElementById('buttonModale');
 
-buttonModaleValider.addEventListener('click', async function(event) {
+async function SentNewProjetModale (event) {
     if (buttonModaleValider.classList.contains('sentForm')){
         event.preventDefault();
 
+        const imageInput = document.getElementById('imageInput').files[0];
+        const title = document.getElementById('titre').value;
+        const category = document.getElementById('categorie').value;
+        
         const formData = new FormData();
-        formData.append('image', document.getElementById('imageInput').files[0]);
-        formData.append('title', document.getElementById('titre').value);
-        formData.append('category', document.getElementById('categorie').value);
+        formData.append('image', imageInput);
+        formData.append('title', title);
+        formData.append('category', category);
 
         // Requête pour envoyer les données au serveur
         const token = sessionStorage.getItem('authToken');
@@ -330,10 +383,8 @@ buttonModaleValider.addEventListener('click', async function(event) {
             const response = await fetch ("http://localhost:5678/api/works", {
             method: 'POST',
             headers: {
-                 'Authorization': 'Bearer ' + token,
-                //'Content-Type': 'application/json',
-                'accept': 'application/json',
-                //'Content-Type': 'multipart/form-data',
+                //accept: "application/json",
+                Authorization: `Bearer ${token}`,
             },
             body: formData,
             });
@@ -356,5 +407,7 @@ buttonModaleValider.addEventListener('click', async function(event) {
         }
         
     }
-})
+};
+
+
 
