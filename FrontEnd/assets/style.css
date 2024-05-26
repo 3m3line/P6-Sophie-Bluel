@@ -215,11 +215,11 @@ header, footer, #introduction, #portfolio, #contact{
 	position: relative;
 }
 
-.galleryModale img {
+.galleryimage {
 	width: 100%;
 	}
 
-#gallerypoubelle{
+.gallerypoubelle{
 	cursor: pointer;
 	position: absolute;
 	z-index: 3;

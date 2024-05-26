@@ -165,7 +165,28 @@ function Edit () {
 Edit ();
 
 ////MODALE
-//modale galerie photo
+///modale galerie photo
+async function fetchSupWork() {
+    try{
+        const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+            },
+        });
+        if (response.ok) {
+            console.log(`L'œuvre avec l'identifiant ${workId} a été supprimée avec succès.`);
+            return true;
+        } else {
+            console.error('La suppression de l\'œuvre a échoué.');
+            return false; 
+        }
+    } catch (error) {
+        console.error('Une erreur s\'est produite pendant la suppression de l\'œuvre.', error);
+        return false; 
+    }
+};
+
 async function galleryModaleFetch (){
     const ModaleFetch = await fetchWork ();
     const galleryModale = document.getElementById('galleryModale');
@@ -173,9 +194,21 @@ async function galleryModaleFetch (){
         const galleryModaleElement = document.createElement('figure');
         galleryModale.appendChild(galleryModaleElement);
         galleryModaleElement.innerHTML = `
-                <img src='${work.imageUrl}' alt='${work.title}' id='galleryimage'/>
-                <img src='./assets/icons/poubelle.png' alt ='poubelle' id='gallerypoubelle'/>`
+                <img src='${work.imageUrl}' alt='${work.title}' class='galleryimage'/>
+                <img src='./assets/icons/poubelle.png' alt ='poubelle' class='gallerypoubelle'/>`;
+        
+        galleryModale.addEventListener('click', async function(event) {
+            if (event.target.classList.contains('gallerypoubelle')) {
+                const workId = work.id;
+                const deletedWork = await fetchSupWork(workId);
+                if (deletedWork) {
+                    // Supprimer l'élément de la galerie si la suppression est réussie
+                    galleryModaleElement.remove();
+                }
+            }
+        });
     });
+    
 }
 galleryModaleFetch ()
 
@@ -229,7 +262,10 @@ function createGalleryModale (event) {
 
 document.getElementById('editSection').addEventListener('click', createGalleryModale);
 
-//modale ajout photo
+//suppression Travaux
+document.getElementById('gallerypoubelle')
+
+///modale ajout photo
 
 async function createCategoryModale () {
     const fetchCategoryModale = await fetchCategory();
