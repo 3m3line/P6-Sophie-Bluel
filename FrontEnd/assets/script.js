@@ -223,6 +223,7 @@ async function createCategoryModale () {
         const CategoryModaleElement = document.createElement("option")
         CategoryModaleElement.value= category.name;
         CategoryModaleElement.text = category.name;
+        CategoryModaleElement.id = category.id;
         CategoryModale.appendChild(CategoryModaleElement);
     })
 }
@@ -313,43 +314,47 @@ document.getElementById('returnArrowModale').addEventListener('click', function(
 //Envoi nouveaux travaux
 const buttonModaleValider = document.getElementById('buttonModale');
 
-buttonModaleValider.addEventListener('click', function(event) {
+buttonModaleValider.addEventListener('click', async function(event) {
     if (buttonModaleValider.classList.contains('sentForm')){
-        let formData = new FormData();
-        formData.append('title', document.getElementById('titre').value);
+        event.preventDefault();
+
+        const formData = new FormData();
         formData.append('image', document.getElementById('imageInput').files[0]);
+        formData.append('title', document.getElementById('titre').value);
         formData.append('category', document.getElementById('categorie').value);
 
-        
-
-        // Requête AJAX pour envoyer les données au serveur
-        let request = new XMLHttpRequest();
-        request.open('POST', 'http://localhost:5678/api/works');
-
+        // Requête pour envoyer les données au serveur
         const token = sessionStorage.getItem('authToken');
-        console.log(token)
-        request.setRequestHeader('Authorization', 'Bearer ' + token);
 
-        request.onload = function() {
-            if (request.status === 201) {
-                // Réponse du serveur
-                console.log(request.responseText);
-                console.log('Données envoyées avec succès !');
+        try{
+            const response = await fetch ("http://localhost:5678/api/works", {
+            method: 'POST',
+            headers: {
+                 'Authorization': 'Bearer ' + token,
+                //'Content-Type': 'application/json',
+                'accept': 'application/json',
+                //'Content-Type': 'multipart/form-data',
+            },
+            body: formData,
+            });
+
+            if(response.ok){
+                const responseData = await response.json();
+                console.log(responseData);
+                console.log('Data sent successfully!');
             } else {
-                // Gestion des erreurs
-                document.getElementById('messageModale').textContent = 'request.responseText';
-                console.error('Status:', request.status);
-                console.error('Response:', request.responseText);
+                // errors
+                const errorMessage = await response.text();
+                document.getElementById('messageModale').textContent = 'Une erreur est survenue lors de l\'envoi des données.';
+                console.error('Status:', response.status);
+                console.error('Response:', errorMessage);
             }
-        };
-        request.onerror = function() {
-            // Gestion des erreurs réseau
-            document.getElementById('messageModale').textContent = 'Une erreur réseau est survenue lors de l\'envoi des données.';
-            console.error('Network error.');
-        };
-
-        request.send(formData);
-        event.preventDefault();
+        }
+        catch(error) {
+            console.error('There was a problem with the fetch operation:', error);
+            document.getElementById('message').textContent = 'Une erreur a eu lieu, merci d\'essayer de nouveau';
+        }
+        
     }
 })
 
