@@ -241,13 +241,11 @@ function createGalleryModale (event) {
     //fermeture modale
     exitModale.addEventListener('click', function(){
         modaleEdit.style.display = "none";
-        document.getElementById('categorie').selectedIndex = 0;
-        document.getElementById('titre').value="";
         history.replaceState(null, null, 'index.html');
+        document.getElementById('formulaireModale').reset();
         messageModale.textContent="";
         buttonModaleValider.removeEventListener('click', SentNewProjetModale);
         document.getElementById('imagePreview').innerHTML = "";
-        imageInput.value = "";
         imageInput.removeEventListener('change', loadingPreviewImage);
         document.getElementById('iconeImageModale').style.display="block";
         document.getElementById('imageButtonInput').style.display="block";
@@ -378,16 +376,19 @@ function createAjoutPhotoModale (event){
         console.log(this.files);
         validateButtonState();
         console.log('La valeur de l\'entrée a été modifiée:', this.value);
+        document.getElementById('messageModale').textContent ='';
     });
     
     document.getElementById('titre').addEventListener('input', function() {
         validateButtonState();
         console.log('La valeur du titre a changé pour:', this.value);
+        document.getElementById('messageModale').textContent ='';
     });
     
     document.getElementById('categorie').addEventListener('change', function() {
         validateButtonState();
         console.log('La catégorie a changé pour:', this.value);
+        document.getElementById('messageModale').textContent ='';
     });
 
     //envoi formulaire
@@ -411,14 +412,14 @@ async function SentNewProjetModale (event) {
     if (buttonModaleValider.classList.contains('sentForm')){
         event.preventDefault();
 
-        const imageInput = document.getElementById('imageInput').files[0];
+        const imageInputSent = document.getElementById('imageInput').files[0];
         const title = document.getElementById('titre').value;
         const categoryidTableauFront = document.getElementById('categorie').selectedIndex;
         const categoryTableau = document.getElementById('categorie').options;
         const idSelected = categoryTableau[categoryidTableauFront].id;
 
         const formData = new FormData();
-        formData.append('image', imageInput);
+        formData.append('image', imageInputSent);
         formData.append('title', title);
         formData.append('category', parseInt(idSelected));
 
@@ -439,6 +440,22 @@ async function SentNewProjetModale (event) {
                 const responseData = await response.json();
                 console.log(responseData);
                 console.log('Data sent successfully!');
+                document.getElementById('messageModale').textContent = 'Projet envoyé !';
+
+                //mise à jour des galleries
+                await AddNewProjetHome();
+                await AddNewProjetModale ();
+
+
+                //reset formulaire
+                const ImageVide = document.getElementById('imagePreview')
+                ImageVide.innerHTML = "";
+                ImageVide.style.display="none";
+                document.getElementById('iconeImageModale').style.display="block";
+                document.getElementById('imageButtonInput').style.display="block";
+                document.getElementById('infoImageModale').style.display="block";
+                document.getElementById('formulaireModale').reset();
+
             } else {
                 // errors
                 const errorMessage = await response.text();
@@ -449,11 +466,50 @@ async function SentNewProjetModale (event) {
         }
         catch(error) {
             console.error('There was a problem with the fetch operation:', error);
-            document.getElementById('message').textContent = 'Une erreur a eu lieu, merci d\'essayer de nouveau';
+            document.getElementById('messageModale').textContent = 'Une erreur a eu lieu, merci d\'essayer de nouveau';
         }
         
     }
+    else{
+        document.getElementById('messageModale').textContent = 'Veuillez compléter tous les champs du formulaire avant de le soumettre';
+    }
 };
 
+async function AddNewProjetHome () {
+    try {
+        const ProjetExistant = document.querySelectorAll('#galleryModale figure');
+        const ProjetExistantID = Array.from(ProjetExistant).map(work => work.dataset.id);
+
+        const workNew1 = await fetchWork();
+
+        workNew1.forEach(work=>{
+            if (!ProjetExistantID.includes(work.id.toString())) {
+                const workElementNew = document.createElement('figure');
+                gallery.appendChild(workElementNew);
+                workElementNew.innerHTML = `
+                    <img src='${work.imageUrl}' alt='${work.title}' />
+                    <h3>${work.title}</h3>`;
+            }
+        })
+    }catch (error) {
+        console.error('Une erreur s\'est produite lors de l\'ajout d\' un projet à la galerie', error);
+    }
+}
+
+async function AddNewProjetModale () {
+    try {
+        const workNew2 = await fetchWork();
+        workNew2.map(work=>{
+            const galleryModaleElementNew = document.createElement('figure');
+            document.getElementById('galleryModale').appendChild(galleryModaleElementNew);
+            galleryModaleElementNew.innerHTML = `
+                    <img src='${work.imageUrl}' alt='${work.title}' class='galleryimage'/>
+                    <img src='./assets/icons/poubelle.png' alt ='poubelle' class='gallerypoubelle'/>`;
+        })
+    }
+    catch (error){
+        console.error('Une erreur s\'est produite lors de l\'ajout d\' un projet à la modale', error);
+    }
+}
 
 
