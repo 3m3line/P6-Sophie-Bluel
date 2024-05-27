@@ -24,6 +24,7 @@ const editSectionPortfolio = document.querySelector('.entete-portfolio');
 // code pour gallery
 async function fetchWork() {
     try{
+
         const response = await fetch ("http://localhost:5678/api/works");
         const data = await response.json();
         return data;
@@ -166,14 +167,18 @@ Edit ();
 
 ////MODALE
 ///modale galerie photo
-async function fetchSupWork() {
+async function fetchSupWork(workId) {
+    const token = sessionStorage.getItem('authToken');
     try{
         const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
             method: 'DELETE',
             headers: {
-                'Accept': 'application/json',
+                'Accept' : 'application/json',
+                'Authorization': `Bearer ${token}`,
             },
+
         });
+        console.log({ response });
         if (response.ok) {
             console.log(`L'œuvre avec l'identifiant ${workId} a été supprimée avec succès.`);
             return true;
@@ -197,8 +202,9 @@ async function galleryModaleFetch (){
                 <img src='${work.imageUrl}' alt='${work.title}' class='galleryimage'/>
                 <img src='./assets/icons/poubelle.png' alt ='poubelle' class='gallerypoubelle'/>`;
         
-        galleryModale.addEventListener('click', async function(event) {
-            if (event.target.classList.contains('gallerypoubelle')) {
+        galleryModaleElement.addEventListener('click', async function(event) {
+        console.log({ event });    
+       if (event.target.classList.contains('gallerypoubelle')) {
                 const workId = work.id;
                 const deletedWork = await fetchSupWork(workId);
                 if (deletedWork) {
@@ -301,7 +307,7 @@ function loadingPreviewImage() {
 
         // création preview après chargement image
         reader.onload = function(e) {
-            
+
             const img = document.createElement('img');
             img.src = e.target.result;
 
@@ -309,10 +315,11 @@ function loadingPreviewImage() {
             infoImageModale.style.display = 'none';
             iconeImageModale.style.display = 'none';
 
+            imagePreview.innerHTML = '';
             imagePreview.appendChild(img);
             imagePreview.style.display = 'flex';
         };
-    
+
 
         // Lire le contenu du fichier en tant qu'URL de données
         reader.readAsDataURL(this.files[0]);
@@ -368,6 +375,7 @@ function createAjoutPhotoModale (event){
     //suivi changement formulaire
     imageInput.addEventListener('change', function() {
         loadingPreviewImage.call(this);
+        console.log(this.files);
         validateButtonState();
         console.log('La valeur de l\'entrée a été modifiée:', this.value);
     });
@@ -405,12 +413,14 @@ async function SentNewProjetModale (event) {
 
         const imageInput = document.getElementById('imageInput').files[0];
         const title = document.getElementById('titre').value;
-        const category = document.getElementById('categorie').value;
-        
+        const categoryidTableauFront = document.getElementById('categorie').selectedIndex;
+        const categoryTableau = document.getElementById('categorie').options;
+        const idSelected = categoryTableau[categoryidTableauFront].id;
+
         const formData = new FormData();
         formData.append('image', imageInput);
         formData.append('title', title);
-        formData.append('category', category);
+        formData.append('category', parseInt(idSelected));
 
         // Requête pour envoyer les données au serveur
         const token = sessionStorage.getItem('authToken');
@@ -420,7 +430,7 @@ async function SentNewProjetModale (event) {
             method: 'POST',
             headers: {
                 //accept: "application/json",
-                Authorization: `Bearer ${token}`,
+                'Authorization': `Bearer ${token}`,
             },
             body: formData,
             });
