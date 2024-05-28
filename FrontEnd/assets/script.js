@@ -22,6 +22,7 @@ const portfolio = document.getElementById('portfolio');
 const editSectionPortfolio = document.querySelector('.entete-portfolio');
 
 // code pour gallery
+
 async function fetchWork() {
     try{
 
@@ -38,9 +39,10 @@ async function createGallery() {
         const data = await fetchWork();
         data.forEach(work => {
             const workElement = document.createElement('figure');
+            workElement.id=`work-${work.id}`
             gallery.appendChild(workElement);
             workElement.innerHTML = `
-                <img src='${work.imageUrl}' alt='${work.title}' />
+                <img src='${work.imageUrl}' alt='${work.title}'/>
                 <h3>${work.title}</h3>`;
         });
     } catch (error) {
@@ -195,8 +197,12 @@ async function fetchSupWork(workId) {
 async function galleryModaleFetch (){
     const ModaleFetch = await fetchWork ();
     const galleryModale = document.getElementById('galleryModale');
+    const galleryHome = document.getElementById('gallery');
+    const galleryHomeElement = document.querySelector('figure')
+
     ModaleFetch.forEach(work => {
         const galleryModaleElement = document.createElement('figure');
+        console.log('galleryModaleElement.dataset.id')
         galleryModale.appendChild(galleryModaleElement);
         galleryModaleElement.innerHTML = `
                 <img src='${work.imageUrl}' alt='${work.title}' class='galleryimage'/>
@@ -210,11 +216,14 @@ async function galleryModaleFetch (){
                 if (deletedWork) {
                     // Supprimer l'élément de la galerie si la suppression est réussie
                     galleryModaleElement.remove();
+                    const corresponding = work-workId
+                    if (corresponding == galleryHomeElement.id) {
+                        correspondingHomeElement.remove();
+                    }
                 }
             }
         });
     });
-    
 }
 galleryModaleFetch ()
 
@@ -430,7 +439,6 @@ async function SentNewProjetModale (event) {
             const response = await fetch ("http://localhost:5678/api/works", {
             method: 'POST',
             headers: {
-                //accept: "application/json",
                 'Authorization': `Bearer ${token}`,
             },
             body: formData,
@@ -477,17 +485,17 @@ async function SentNewProjetModale (event) {
 
 async function AddNewProjetHome () {
     try {
-        const ProjetExistant = document.querySelectorAll('#galleryModale figure');
-        const ProjetExistantID = Array.from(ProjetExistant).map(work => work.dataset.id);
+        const ProjetExistant = document.querySelectorAll('#gallery figure');
+        const ProjetExistantID = Array.from(ProjetExistant).map(work => work.id);
 
-        const workNew1 = await fetchWork();
+        //const workNew1 = await fetchWork();
 
         workNew1.forEach(work=>{
             if (!ProjetExistantID.includes(work.id.toString())) {
                 const workElementNew = document.createElement('figure');
                 gallery.appendChild(workElementNew);
                 workElementNew.innerHTML = `
-                    <img src='${work.imageUrl}' alt='${work.title}' />
+                    <img src='${work.imageUrl}' alt='${work.title}' id='work-${work.id}' />
                     <h3>${work.title}</h3>`;
             }
         })
