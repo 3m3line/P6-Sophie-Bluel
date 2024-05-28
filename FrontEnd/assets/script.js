@@ -1,45 +1,30 @@
-//effet nav actif
-document.addEventListener("DOMContentLoaded", function() {
-    const currentPathWithAnchor = window.location.pathname + window.location.hash; // Récupère le chemin d'accès de la page actuelle avec l'ancre
-
-    const navLinks = document.querySelectorAll("#header-nav ul li a");
-
-    navLinks.forEach(function(link) {
-        const linkPathWithAnchor = new URL(link.href).pathname + new URL(link.href).hash; // Récupère le chemin d'accès du lien avec l'ancre
-
-        if (linkPathWithAnchor === currentPathWithAnchor) {
-            link.parentElement.classList.add("active");
-        } else {
-            link.parentElement.classList.remove("active");
-        }
-    });
-});
-
-
 //variables appelées
 const gallery = document.querySelector('.gallery');
 const portfolio = document.getElementById('portfolio');
 const editSectionPortfolio = document.querySelector('.entete-portfolio');
 
 // code pour gallery
+let worksTable = [];
 
 async function fetchWork() {
     try{
 
         const response = await fetch ("http://localhost:5678/api/works");
         const data = await response.json();
-        return data;
+        worksTable = data;
+        await createGallery (worksTable);
+        await galleryModale (worksTable);
+
     }catch (error){
         console.error ('une erreur s\'est produite pendant la récupération des données')
             return [];}
 };
 
-async function createGallery() {
+async function createGallery(data) {
     try {
-        const data = await fetchWork();
+        gallery.innerHTML='';
         data.forEach(work => {
             const workElement = document.createElement('figure');
-            workElement.id=`work-${work.id}`
             gallery.appendChild(workElement);
             workElement.innerHTML = `
                 <img src='${work.imageUrl}' alt='${work.title}'/>
@@ -49,7 +34,6 @@ async function createGallery() {
         console.error('Une erreur s\'est produite lors de la création de la galerie', error);
     }
 }
-createGallery();
 
 // filtres
 async function fetchCategory() {
@@ -194,13 +178,11 @@ async function fetchSupWork(workId) {
     }
 };
 
-async function galleryModaleFetch (){
-    const ModaleFetch = await fetchWork ();
+async function galleryModale (data){
     const galleryModale = document.getElementById('galleryModale');
-    const galleryHome = document.getElementById('gallery');
-    const galleryHomeElement = document.querySelector('figure')
+    galleryModale.innerHTML = '';
 
-    ModaleFetch.forEach(work => {
+    data.forEach(work => {
         const galleryModaleElement = document.createElement('figure');
         console.log('galleryModaleElement.dataset.id')
         galleryModale.appendChild(galleryModaleElement);
@@ -216,16 +198,17 @@ async function galleryModaleFetch (){
                 if (deletedWork) {
                     // Supprimer l'élément de la galerie si la suppression est réussie
                     galleryModaleElement.remove();
-                    const corresponding = work-workId
-                    if (corresponding == galleryHomeElement.id) {
-                        correspondingHomeElement.remove();
+
+                    const index = data.findIndex(item => item.id ===workId);
+                    if (index !== -1){
+                        data.splice(index,1);
+                        await createGallery(worksTable);
                     }
                 }
             }
         });
     });
 }
-galleryModaleFetch ()
 
 function createGalleryModale (event) {
     event.preventDefault();
@@ -448,12 +431,12 @@ async function SentNewProjetModale (event) {
                 const responseData = await response.json();
                 console.log(responseData);
                 console.log('Data sent successfully!');
+
+                worksTable.push(responseData);
+                createGallery(worksTable);
+                galleryModale(worksTable);
+
                 document.getElementById('messageModale').textContent = 'Projet envoyé !';
-
-                //mise à jour des galleries
-                await AddNewProjetHome();
-                await AddNewProjetModale ();
-
 
                 //reset formulaire
                 const ImageVide = document.getElementById('imagePreview')
@@ -482,42 +465,3 @@ async function SentNewProjetModale (event) {
         document.getElementById('messageModale').textContent = 'Veuillez compléter tous les champs du formulaire avant de le soumettre';
     }
 };
-
-async function AddNewProjetHome () {
-    try {
-        const ProjetExistant = document.querySelectorAll('#gallery figure');
-        const ProjetExistantID = Array.from(ProjetExistant).map(work => work.id);
-
-        //const workNew1 = await fetchWork();
-
-        workNew1.forEach(work=>{
-            if (!ProjetExistantID.includes(work.id.toString())) {
-                const workElementNew = document.createElement('figure');
-                gallery.appendChild(workElementNew);
-                workElementNew.innerHTML = `
-                    <img src='${work.imageUrl}' alt='${work.title}' id='work-${work.id}' />
-                    <h3>${work.title}</h3>`;
-            }
-        })
-    }catch (error) {
-        console.error('Une erreur s\'est produite lors de l\'ajout d\' un projet à la galerie', error);
-    }
-}
-
-async function AddNewProjetModale () {
-    try {
-        const workNew2 = await fetchWork();
-        workNew2.map(work=>{
-            const galleryModaleElementNew = document.createElement('figure');
-            document.getElementById('galleryModale').appendChild(galleryModaleElementNew);
-            galleryModaleElementNew.innerHTML = `
-                    <img src='${work.imageUrl}' alt='${work.title}' class='galleryimage'/>
-                    <img src='./assets/icons/poubelle.png' alt ='poubelle' class='gallerypoubelle'/>`;
-        })
-    }
-    catch (error){
-        console.error('Une erreur s\'est produite lors de l\'ajout d\' un projet à la modale', error);
-    }
-}
-
-
