@@ -28,7 +28,7 @@ async function createGallery(data) {
             gallery.appendChild(workElement);
             workElement.innerHTML = `
                 <img src='${work.imageUrl}' alt='${work.title}'/>
-                <h3>${work.title}</h3>`;
+                <figcaption>${work.title}</figcaption>`;
         });
     } catch (error) {
         console.error('Une erreur s\'est produite lors de la création de la galerie', error);
@@ -100,7 +100,7 @@ async function Filtering() {
                     gallery.appendChild(workElement);
                     workElement.innerHTML = `
                         <img src='${work.imageUrl}' alt='${work.title}' />
-                        <h3>${work.title}</h3>`;
+                        <figcaption>${work.title}</figcaption>`;
                 });
             });
         });

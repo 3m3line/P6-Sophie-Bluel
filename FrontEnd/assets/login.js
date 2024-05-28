@@ -21,6 +21,7 @@ document.getElementById('loginForm').addEventListener('submit', async(event)=> {
                 document.getElementById('message').textContent = 'Connexion réussie !';
                 document.getElementById('message').style.color = '#1D6154';
                 sessionStorage.setItem('authToken', data.token);
+                navConnexion.classList.remove("active");
                 window.location.href = "index.html";
         }
 

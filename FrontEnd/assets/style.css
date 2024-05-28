@@ -217,6 +217,8 @@ header, footer, #introduction, #portfolio, #contact{
 
 .galleryimage {
 	width: 100%;
+	height: 100%;
+	object-fit: cover;
 	}
 
 .gallerypoubelle{
@@ -299,9 +301,6 @@ header, footer, #introduction, #portfolio, #contact{
 	gap: 1em;	
 }
 
-#portfolio h3 {
-	margin-top: 0.5em;
-}
 .gallery {
 	width: 100%;
 	display: grid;
@@ -311,8 +310,20 @@ header, footer, #introduction, #portfolio, #contact{
 	margin-top: 5em;
 }
 
+.gallery figure {
+	display: flex;
+	flex-direction: column;
+	position: relative;
+}
+
 .gallery img {
 	width: 100%;
+	height: 100%;
+  	object-fit: cover;
+}
+
+.gallery figcaption{
+	margin-top: 0.5em;
 }
 
 .filter {
