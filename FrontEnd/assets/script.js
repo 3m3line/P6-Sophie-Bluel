@@ -289,20 +289,25 @@ function FormModaleValid() {
     return true;
 }
 
-function loadingPreviewImage() {
+async function loadingPreviewImage() {
     const imagePreview = document.getElementById('imagePreview');
     const infoImageModale = document.getElementById('infoImageModale');
     const iconeImageModale = document.getElementById('iconeImageModale');
     const imageButtonPreview = document.getElementById('imageButtonInput');
+    const fileInput = document.getElementById('imageInput');
 
-    if (this.files && this.files[0]) {
-        const reader = new FileReader();
-
-        // création preview après chargement image
-        reader.onload = function(e) {
+    if (fileInput.files && fileInput.files[0]) {
+        try {
+            const file = fileInput.files[0];
+            const fileDataUrl = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
 
             const img = document.createElement('img');
-            img.src = e.target.result;
+            img.src = fileDataUrl;
 
             imageButtonPreview.style.display = 'none';
             infoImageModale.style.display = 'none';
@@ -311,13 +316,11 @@ function loadingPreviewImage() {
             imagePreview.innerHTML = '';
             imagePreview.appendChild(img);
             imagePreview.style.display = 'flex';
-        };
-
-
-        // Lire le contenu du fichier en tant qu'URL de données
-        reader.readAsDataURL(this.files[0]);
+        } catch (error) {
+            console.error('Error loading image:', error);
+        }
     }
-};
+}
 
 function createAjoutPhotoModale (event){
     event.preventDefault();
@@ -367,7 +370,7 @@ function createAjoutPhotoModale (event){
 
     //suivi changement formulaire
     imageInput.addEventListener('change', function() {
-        loadingPreviewImage.call(this);
+        loadingPreviewImage ();
         console.log(this.files);
         validateButtonState();
         console.log('La valeur de l\'entrée a été modifiée:', this.value);
