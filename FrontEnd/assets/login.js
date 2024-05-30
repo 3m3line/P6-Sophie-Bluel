@@ -25,14 +25,8 @@ document.getElementById('loginForm').addEventListener('submit', async(event)=> {
                 window.location.href = "index.html";
         }
 
-        //  else if (response.status === 401) {
-        //      const data = await response.json();
-        //      document.getElementById('message').textContent = 'Le mot de passe est invalide';
-        //      document.getElementById('message').style.color = 'red';
-        // }
-
         else {
-            document.getElementById('message').textContent = 'L\'email ou le mot de passe est invalide';
+            document.getElementById('message').textContent = 'Erreur dans l\’identifiant ou le mot de passe';
             document.getElementById('message').style.color = 'red';
         }
     }

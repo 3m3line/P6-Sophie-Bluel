@@ -11,6 +11,7 @@ async function fetchWork() {
 
         const response = await fetch ("http://localhost:5678/api/works");
         const data = await response.json();
+        console.log('Fetched works:', data);
         worksTable = data;
         await createGallery (worksTable);
         await galleryModale (worksTable);
@@ -19,6 +20,7 @@ async function fetchWork() {
         console.error ('une erreur s\'est produite pendant la récupération des données')
             return [];}
 };
+fetchWork();
 
 async function createGallery(data) {
     try {
@@ -36,16 +38,21 @@ async function createGallery(data) {
 }
 
 // filtres
+let categoryTable = [];
+
 async function fetchCategory() {
     try {
         const response = await fetch("http://localhost:5678/api/categories");
-        const data = await response.json();
-        return data; 
+        const dataCategory = await response.json();
+        categoryTable = dataCategory;
+        await Filtering (categoryTable);
+        await createCategoryModale (categoryTable);
     } catch (error) {
         console.error('une erreur s\'est produite pendant la récupération des données', error);
         return [];
     }
 }
+fetchCategory();
 
 function createFilterButtons(categories) {
     const filterWorkParent = document.getElementById('filter')
@@ -71,9 +78,7 @@ function createFilterButtons(categories) {
 
 async function Filtering() {
     try {
-        const categories = await fetchCategory();
-        const filterWorkParent = createFilterButtons(categories);
-        const worksData = await fetchWork ();
+        const filterWorkParent = createFilterButtons(categoryTable);
         const filterButtons = filterWorkParent.querySelectorAll('.filter-button');
 
         filterButtons.forEach(button => {
@@ -85,9 +90,9 @@ async function Filtering() {
                 const filterValue = this.dataset.filter;
                 let filteredWorks;
                 if (filterValue === "all") {
-                    filteredWorks = worksData;
+                    filteredWorks = worksTable;
                 } else {
-                    filteredWorks = worksData.filter(work => {
+                    filteredWorks = worksTable.filter(work => {
                         return work.category.name.toLowerCase() === filterValue;
                     });
                 };
@@ -109,8 +114,6 @@ async function Filtering() {
         console.error('une erreur s\'est produite pendant la récupération des données', error);
     }
 }
-
-Filtering();
 
 //Edition après connexion et déconnexion
 function Edit () {
@@ -263,10 +266,10 @@ document.getElementById('gallerypoubelle')
 
 ///modale ajout photo
 
-async function createCategoryModale () {
-    const fetchCategoryModale = await fetchCategory();
+async function createCategoryModale (dataCategory) {
+    //const fetchCategoryModale = await fetchCategory();
     const CategoryModale = document.getElementById('categorie');
-    fetchCategoryModale.forEach(category => {
+    dataCategory.forEach(category => {
         const CategoryModaleElement = document.createElement("option")
         CategoryModaleElement.value= category.name;
         CategoryModaleElement.text = category.name;
@@ -274,7 +277,7 @@ async function createCategoryModale () {
         CategoryModale.appendChild(CategoryModaleElement);
     })
 }
-createCategoryModale ()
+//createCategoryModale ()
 
 function FormModaleValid() {
     const imageModale = document.getElementById('imageInput').value;
@@ -462,6 +465,7 @@ async function SentNewProjetModale (event) {
         
     }
     else{
-        document.getElementById('messageModale').textContent = 'Veuillez compléter tous les champs du formulaire avant de le soumettre';
+        document.getElementById('messageModale').textContent = 'Veuillez compléter tous les champs du formulaire';
+        document.getElementById('messageModale').style.color = 'red';
     }
 };

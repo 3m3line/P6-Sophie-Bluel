@@ -281,6 +281,11 @@ header, footer, #introduction, #portfolio, #contact{
   	border-bottom: 1px solid #B3B3B3;
 }
 
+#messageModale{
+	margin-top: 1em;
+	text-align: center;
+}
+
 /*section portfolio*/
 .entete-portfolio{
 	display: flex;
