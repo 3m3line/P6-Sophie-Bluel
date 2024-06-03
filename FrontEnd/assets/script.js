@@ -126,6 +126,7 @@ function Edit () {
     // L'utilisateur est authentifié, afficher les éléments d'édition
         document.getElementById('filter').style.display = 'none';
         document.getElementById('editSection').style.display = 'flex';
+        document.getElementById('banner').style.display = 'flex';
         navConnexion.textContent = "logout";
         navConnexion.href = "#";
 
@@ -143,6 +144,7 @@ function Edit () {
     // L'utilisateur n'est pas authentifié, masquer les éléments d'édition
         document.getElementById('filter').style.display = 'block'
         document.getElementById('editSection').style.display = 'none';
+        document.getElementById('banner').style.display = 'none';
         navConnexion.textContent = "login";
         // navConnexion.href = "./connexion.html";
         navConnexion.removeEventListener('click', Edit);
@@ -223,7 +225,7 @@ function createGalleryModale (event) {
     const messageModale = document.getElementById('messageModale');
     const imageInput = document.getElementById('imageInput');
 
-    modaleEdit.style.display = "flex";
+    modaleEdit.style.display = "block";
     formulaireModale.style.display = "none";
     galleryModale.style.display = "grid";
     messageModale.textContent="";
@@ -329,7 +331,7 @@ function createAjoutPhotoModale (event){
     const imageInput = document.getElementById('imageInput');
     const imageButtonInput = document.getElementById('imageButtonInput');
 
-    modaleEdit.style.display = "flex";
+    modaleEdit.style.display = "block";
     galleryModale.style.display = "none";
     formulaireModale.style.display = "flex";
 
