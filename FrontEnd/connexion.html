@@ -14,47 +14,49 @@
     <link rel="stylesheet" href="./assets/style.css" />
   </head>
   <body>
-    <header>
-      <a href="./index.html"
-        ><h1>Sophie Bluel <span>ARCHITECTE D'INTERIEUR</span></h1></a
-      >
-      <nav id="header-nav">
-        <ul>
-          <li>
-            <a href="./index.html#portfolio" id="navPortfolio">projets</a>
-          </li>
-          <li><a href="./index.html#contact" id="navContact">contact</a></li>
-          <li><a href="./connexion.html" id="navConnexion">login</a></li>
-          <li>
-            <a href=""
-              ><img src="./assets/icons/instagram.png" alt="Instagram"
-            /></a>
-          </li>
-        </ul>
-      </nav>
-    </header>
-    <main>
-      <section id="LogIn">
-        <h1>Log In</h1>
-        <form action="/login" method="post" id="loginForm">
-          <label for="email">Email</label>
-          <input type="text" name="email" id="email" />
-          <label for="MTP">Mot de passe</label>
-          <input type="password" name="MTP" id="MTP" />
-          <p id="message"></p>
-          <input type="submit" value="Se connecter" id="loginSubmit" />
-        </form>
-        <p><a class="mtp-lien" href="">Mot de passe oublié</a></p>
-      </section>
-    </main>
-    <footer>
-      <nav>
-        <ul>
-          <li><a href="">Mentions Légales</a></li>
-        </ul>
-      </nav>
-    </footer>
-    <script src="./assets/login.js"></script>
-    <script src="./assets/nav.js"></script>
+    <div class="main-container">
+      <header>
+        <a href="./index.html"
+          ><h1>Sophie Bluel <span>ARCHITECTE D'INTERIEUR</span></h1></a
+        >
+        <nav id="header-nav">
+          <ul>
+            <li>
+              <a href="./index.html#portfolio" id="navPortfolio">projets</a>
+            </li>
+            <li><a href="./index.html#contact" id="navContact">contact</a></li>
+            <li><a href="./connexion.html" id="navConnexion">login</a></li>
+            <li>
+              <a href=""
+                ><img src="./assets/icons/instagram.png" alt="Instagram"
+              /></a>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <main>
+        <section id="LogIn">
+          <h1>Log In</h1>
+          <form action="/login" method="post" id="loginForm">
+            <label for="email">Email</label>
+            <input type="text" name="email" id="email" />
+            <label for="MTP">Mot de passe</label>
+            <input type="password" name="MTP" id="MTP" />
+            <p id="message"></p>
+            <input type="submit" value="Se connecter" id="loginSubmit" />
+          </form>
+          <p><a class="mtp-lien" href="">Mot de passe oublié</a></p>
+        </section>
+      </main>
+      <footer>
+        <nav>
+          <ul>
+            <li><a href="">Mentions Légales</a></li>
+          </ul>
+        </nav>
+      </footer>
+      <script src="./assets/login.js"></script>
+      <script src="./assets/nav.js"></script>
+    </div>
   </body>
 </html>
