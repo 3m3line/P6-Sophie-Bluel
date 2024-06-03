@@ -261,9 +261,6 @@ function createGalleryModale (event) {
 
 document.getElementById('editSection').addEventListener('click', createGalleryModale);
 
-//suppression Travaux
-document.getElementById('gallerypoubelle')
-
 ///modale ajout photo
 
 async function createCategoryModale (dataCategory) {
@@ -437,6 +434,12 @@ async function SentNewProjetModale (event) {
                 const responseData = await response.json();
                 console.log(responseData);
                 console.log('Data sent successfully!');
+
+                const category = categoryTableau[categoryidTableauFront].textContent;
+                responseData.category = {
+                    id: parseInt(idSelected),
+                    name: category.toLowerCase()
+                };
 
                 worksTable.push(responseData);
                 createGallery(worksTable);
